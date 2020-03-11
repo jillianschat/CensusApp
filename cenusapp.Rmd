@@ -61,8 +61,7 @@ server <- function(input, output) {
                 min = 0)
   })
 }
-  })
-}
+
 
 shinyApp(ui,server)
 

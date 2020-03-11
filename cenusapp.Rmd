@@ -1,0 +1,69 @@
+---
+title: "cenusapp"
+author: "Jillian Schat"
+date: "3/11/2020"
+output: html_document
+---
+
+```{r}
+# install.packages("UScensus2010")
+library(UScensus2010)
+
+setwd("C:/Users/k/PhD/Classes/Stat 479/CensusApp")
+counties <- readRDS("data/counties.rds")
+head(counties)
+
+# install.packages("maps")
+library(maps)
+# install.packages("mapproj")
+library(mapproj)
+
+# percent_map function in helpers.R takes 5 arguments
+# var = column vector from the dataset
+# color = any character string you see in the output 
+  # of colors()
+# legend.title = a character string to use as the 
+  #title of the plot's legend
+# max = a parameter for controlling shade range
+  # defaults to 100
+# min = a parameter for controlling shade range
+  # defaults to 0
+
+source("helpers.R")
+
+percent_map(counties$white, "darkgreen", "% White")
+
+
+
+
+ui <- fluidPage(titlePanel("Jillian's Census App"),
+                sidebarLayout(
+                  sidebarPanel(
+                    helpText("This is my help text"),
+                    
+                    selectInput("var",
+                                label = "Select Demographic",
+                                choices = c("Percent white", "Percent Black", "Percent Hispanic",
+                                            "Percent Asian"),
+                                selected = "Percent Hispanic"),
+                    sliderInput("range",
+                                label = "Range of Interest:",
+                                min = 0, max = 100, value = c(0,100))
+                  ),
+                  mainPanel(plotOutput("map"))))
+server <- function(input, output) {
+  # another place to put code
+  output$map <- renderPlot({
+    perecnt_map(va = data, 
+                color = blues9, 
+                legend.title = "legend", 
+                max = 100, 
+                min = 0)
+  })
+}
+  })
+}
+
+shinyApp(ui,server)
+```
+
